@@ -58,7 +58,7 @@ const Home = ({ darkMode }) => {
 
       {!selectedCategory && !searchQuery && sliderArticles.length > 0 && (
         <div className="mb-10 relative bg-gray-900 rounded-xl overflow-hidden shadow-lg border border-gray-800 group">
-          <div className="relative h-[380px] md:h-[450px] w-full">
+          <div className="relative h-95 md:h-112.5 w-full">
             {sliderArticles.map((article, index) => (
               <div 
                 key={article.id}
@@ -69,7 +69,7 @@ const Home = ({ darkMode }) => {
                   alt={article.title} 
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6 md:p-10">
+                <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6 md:p-10">
                   <span className="bg-para-red text-white px-3 py-1 rounded text-xs font-black uppercase w-max mb-3 tracking-wider">
                     {article.category}
                   </span>
@@ -129,12 +129,12 @@ const Home = ({ darkMode }) => {
                     <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                   </Link>
                 )}
-                <div className="p-5 flex flex-col flex-grow">
+                <div className="p-5 flex flex-col grow">
                   <span className="bg-red-50 text-para-red px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider w-max mb-2">{item.category}</span>
                   <Link to={`/news/${item.id}`}>
                     <h3 className={`text-base font-black ${darkMode ? 'text-white' : 'text-gray-900'} mb-2 leading-snug group-hover:text-para-red transition`}>{item.title}</h3>
                   </Link>
-                  <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-4 flex-grow line-clamp-3 leading-relaxed`}>{item.summary}</p>
+                  <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-4 grow line-clamp-3 leading-relaxed`}>{item.summary}</p>
                   
                   <div className={`text-[11px] ${darkMode ? 'text-gray-400 border-gray-700' : 'text-gray-400 border-gray-100'} border-t pt-3 flex justify-between items-center`}>
                     <Link to={`/author/${encodeURIComponent(item.author || 'Redação')}`} className={`font-semibold hover:underline ${darkMode ? 'text-gray-200 hover:text-para-red' : 'text-gray-700 hover:text-para-red'}`}>
@@ -160,7 +160,7 @@ const Home = ({ darkMode }) => {
             </h3>
             <div className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-100'}`}>
               {mostRead.map((item, index) => (
-                <Link key={item.id} to={`/news/${item.id}`} className="py-3 flex items-start gap-4 group block">
+                <Link key={item.id} to={`/news/${item.id}`} className="py-3 flex items-start gap-4 group">
                   <span className={`text-3xl font-black ${darkMode ? 'text-gray-700' : 'text-gray-200'} group-hover:text-para-red transition`}>0{index + 1}</span>
                   <div>
                     <span className="text-[10px] font-black uppercase text-para-red">{item.category}</span>
@@ -203,7 +203,7 @@ export default function App() {
     <BrowserRouter>
       <div className={`min-h-screen ${darkMode ? 'bg-gray-950 text-white' : 'bg-gray-100 text-gray-900'} flex flex-col font-sans transition-colors duration-300`}>
         <Header darkMode={darkMode} setDarkMode={setDarkMode} />
-        <main className="flex-grow">
+        <main className="grow">
           <Routes>
             <Route path="/" element={<Home darkMode={darkMode} />} />
             <Route path="/news/:id" element={<NewsDetail darkMode={darkMode} />} />

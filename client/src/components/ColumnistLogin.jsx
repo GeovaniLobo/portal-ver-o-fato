@@ -11,7 +11,7 @@ export const ColumnistLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/columnist-login', { username, password });
+      const res = await api.post('api/columnist-login', { username, password });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.role);
       localStorage.setItem('name', res.data.name);

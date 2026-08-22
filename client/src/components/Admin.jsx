@@ -296,9 +296,17 @@ export const Admin = () => {
                   <label className="block text-xs font-bold text-gray-600 mb-1">Editoria / Seção:</label>
                   <select name="category" className="w-full border p-3 text-sm bg-white rounded">
                     <option value="Pará">Pará</option>
+                    <option value="Belém">Belém</option>
                     <option value="Política">Política</option>
                     <option value="Economia">Economia</option>
                     <option value="Esportes">Esportes</option>
+                    <option value="Cotidiano">Cotidiano</option>
+                    <option value="Cultura & Lazer">Cultura & Lazer</option>
+                    <option value="Amazônia & Meio Ambiente">Amazônia & Meio Ambiente</option>
+                    <option value="Brasil">Brasil</option>
+                    <option value="Mundo">Mundo</option>
+                    <option value="Tecnologia">Tecnologia</option>
+                    <option value="Saúde">Saúde</option>
                   </select>
                 </div>
               </div>

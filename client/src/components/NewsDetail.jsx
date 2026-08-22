@@ -36,7 +36,7 @@ export const NewsDetail = () => {
     }
 
     try {
-      const res = await api.post(`/news/${id}/react`, { type });
+      const res = await api.post(`/api/news/${id}/react`, { type });
       setReactions(res.data.reactions);
       localStorage.setItem(votedKey, 'true');
       alert('Obrigado pela sua reação!');

@@ -33,9 +33,9 @@ export const Admin = () => {
   const loadData = async () => {
     try {
       const [uRes, nRes, oRes] = await Promise.all([
-        api.get('/users').catch(() => ({ data: [] })),
-        api.get('/news').catch(() => ({ data: [] })),
-        api.get('/opinions').catch(() => ({ data: [] }))
+        api.get('/api/users').catch(() => ({ data: [] })),
+        api.get('/api/news').catch(() => ({ data: [] })),
+        api.get('/api/opinions').catch(() => ({ data: [] }))
       ]);
       setUsers(uRes.data || []);
       setNews(nRes.data || []);
@@ -55,7 +55,7 @@ export const Admin = () => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await api.post('/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      const res = await api.post('/api/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
       setImageCallback(res.data.imageUrl);
       alert('Upload realizado com sucesso!');
       loadData();
@@ -68,7 +68,7 @@ export const Admin = () => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await api.post('/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      const res = await api.post('/api/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
       const imageUrl = res.data.imageUrl;
       const tag = `\n[IMAGEM:${imageUrl}]\n`;
       setNewsContent(prev => prev + tag);
@@ -98,7 +98,7 @@ export const Admin = () => {
     e.preventDefault();
     const authorName = localStorage.getItem('name') || 'Redação';
     try {
-      await api.post('/news', {
+      await api.post('/api/news', {
           title: e.target.title.value,
           category: e.target.category.value,
           summary: e.target.summary.value,
@@ -117,7 +117,7 @@ export const Admin = () => {
 
   const handleApproveNews = async (item) => {
     try {
-      await api.put(`/news/${item.id}`, { ...item, status: 'publicado' });
+      await api.put(`/api/news/${item.id}`, { ...item, status: 'publicado' });
       alert('Notícia da curadoria aprovada e publicada!');
       loadData();
     } catch {
@@ -129,7 +129,7 @@ export const Admin = () => {
     e.preventDefault();
     const authorName = localStorage.getItem('name') || 'Colunista';
     try {
-      await api.post('/opinions', {
+      await api.post('/api/opinions', {
           title: e.target.title.value,
           role: e.target.role.value, 
           avatarUrl: opinionAvatarUrl,
@@ -147,10 +147,10 @@ export const Admin = () => {
     try {
       const payload = { name: formName, username: formUser, password: formPass, role: formRole, avatarUrl: userAvatarUrl, area: formArea, bio: formBio };
       if (editingUsername) {
-        await api.put(`/users/${editingUsername}`, payload);
+        await api.put(`/api/users/${editingUsername}`, payload);
         alert('Usuário atualizado com sucesso!');
       } else {
-        await api.post('/users', payload);
+        await api.post('/api/users', payload);
         alert('Usuário cadastrado com sucesso!');
       }
       resetUserForm();
@@ -177,7 +177,7 @@ export const Admin = () => {
   const handleDelete = async (endpoint, id) => {
     if (!confirm('Deseja realmente excluir este item?')) return;
     try {
-      await api.delete(`/${endpoint}/${id}`);
+      await api.delete(`/api/${endpoint}/${id}`);
       alert('Excluído com sucesso!');
       loadData();
     } catch { alert('Erro ao excluir item.'); }
@@ -188,7 +188,7 @@ export const Admin = () => {
       <form onSubmit={async (e) => {
         e.preventDefault();
         try {
-          const res = await api.post('/login', { username: e.target.user.value, password: e.target.pass.value });
+          const res = await api.post('/api/login', { username: e.target.user.value, password: e.target.pass.value });
           localStorage.setItem('token', res.data.token);
           localStorage.setItem('role', res.data.role);
           localStorage.setItem('name', res.data.name);

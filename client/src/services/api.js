@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '[https://server-ixpv.onrender.com](https://server-ixpv.onrender.com)3000/api',
+  baseURL: window.location.hostname === 'localhost'
+    ? 'http://localhost:5000'
+    : 'https://server-ixpv.onrender.com'
 });
 
 api.interceptors.request.use((config) => {

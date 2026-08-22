@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
-import { Upload, Flame, MessageSquareQuote, UserPlus, LogOut, Edit, Trash2, Image as ImageIcon, CheckCircle, BarChart2, FileText, Smile, Bold, Italic, Heading, LayoutDashboard, Users, Newspaper } from 'lucide-react';
+import { Upload, Flame, MessageSquareQuote, UserPlus, LogOut, Edit, Trash2, Image as ImageIcon, CheckCircle, BarChart2, FileText, Smile, Bold, Italic, Heading, Users, Newspaper } from 'lucide-react';
 
 export const Admin = () => {
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -14,6 +14,12 @@ export const Admin = () => {
   const [newsImageUrl, setNewsImageUrl] = useState('');
   const [opinionAvatarUrl, setOpinionAvatarUrl] = useState('');
   const [userAvatarUrl, setUserAvatarUrl] = useState('');
+
+  // Estados de controle para edição de notícias
+  const [editingNewsId, setEditingNewsId] = useState(null);
+  const [newsTitle, setNewsTitle] = useState('');
+  const [newsCategory, setNewsCategory] = useState('Pará');
+  const [newsSummary, setNewsSummary] = useState('');
 
   const [editingUsername, setEditingUsername] = useState(null);
   const [formName, setFormName] = useState('');
@@ -94,25 +100,53 @@ export const Admin = () => {
     }, 0);
   };
 
-  const handleCreateNews = async (e) => {
+  // Prepara o formulário para editar uma notícia existente
+  const handleEditNewsClick = (item) => {
+    setEditingNewsId(item.id);
+    setNewsTitle(item.title || '');
+    setNewsCategory(item.category || 'Pará');
+    setNewsSummary(item.summary || '');
+    setNewsContent(item.content || '');
+    setNewsImageUrl(item.imageUrl || '');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const resetNewsForm = () => {
+    setEditingNewsId(null);
+    setNewsTitle('');
+    setNewsCategory('Pará');
+    setNewsSummary('');
+    setNewsContent('');
+    setNewsImageUrl('');
+  };
+
+  const handleSaveNews = async (e) => {
     e.preventDefault();
     const authorName = localStorage.getItem('name') || 'Redação';
+    
+    const payload = {
+      title: newsTitle,
+      category: newsCategory,
+      summary: newsSummary,
+      content: newsContent,
+      imageUrl: newsImageUrl,
+      author: authorName,
+      status: 'publicado'
+    };
+
     try {
-      await api.post('/api/news', {
-          title: e.target.title.value,
-          category: e.target.category.value,
-          summary: e.target.summary.value,
-          content: newsContent,
-          imageUrl: newsImageUrl,
-          author: authorName,
-          status: 'publicado'
-      });
-      alert('Notícia publicada com sucesso!');
-      setNewsImageUrl('');
-      setNewsContent('');
-      e.target.reset();
+      if (editingNewsId) {
+        await api.put(`/api/news/${editingNewsId}`, payload);
+        alert('Notícia atualizada com sucesso!');
+      } else {
+        await api.post('/api/news', payload);
+        alert('Notícia publicada com sucesso!');
+      }
+      resetNewsForm();
       loadData();
-    } catch { alert('Erro ao publicar notícia.'); }
+    } catch { 
+      alert('Erro ao salvar notícia.'); 
+    }
   };
 
   const handleApproveNews = async (item) => {
@@ -257,7 +291,7 @@ export const Admin = () => {
         </div>
       </div>
 
-      {/* Navegação por Abas (Botões Grandes) */}
+      {/* Navegação por Abas */}
       <div className="flex gap-3 bg-white p-3 rounded-lg shadow-sm border">
         <button 
           onClick={() => setActiveTab('news')}
@@ -284,17 +318,39 @@ export const Admin = () => {
       {/* CONTEÚDO DA ABA: NOTÍCIAS */}
       {activeTab === 'news' && (
         <div className="bg-white p-8 rounded-lg shadow border space-y-6">
-          <h2 className="text-xl font-bold text-red-600 flex items-center gap-2 border-b pb-3"><Flame size={20}/> Publicar e Gerenciar Notícias</h2>
+          <div className="flex justify-between items-center border-b pb-3">
+            <h2 className="text-xl font-bold text-red-600 flex items-center gap-2">
+              <Flame size={20}/> {editingNewsId ? 'Editando Notícia Selecionada' : 'Publicar e Gerenciar Notícias'}
+            </h2>
+            {editingNewsId && (
+              <button 
+                onClick={resetNewsForm}
+                className="text-xs bg-gray-200 hover:bg-gray-300 font-bold px-3 py-1.5 rounded transition cursor-pointer"
+              >
+                ✕ Cancelar Edição
+              </button>
+            )}
+          </div>
           
-          <form onSubmit={handleCreateNews} className="space-y-4">
+          <form onSubmit={handleSaveNews} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1">Título da Notícia:</label>
-                  <input name="title" placeholder="Digite um título chamativo..." className="w-full border p-3 text-sm rounded" required />
+                  <input 
+                    value={newsTitle} 
+                    onChange={(e) => setNewsTitle(e.target.value)} 
+                    placeholder="Digite um título chamativo..." 
+                    className="w-full border p-3 text-sm rounded" 
+                    required 
+                  />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1">Editoria / Seção:</label>
-                  <select name="category" className="w-full border p-3 text-sm bg-white rounded">
+                  <select 
+                    value={newsCategory} 
+                    onChange={(e) => setNewsCategory(e.target.value)} 
+                    className="w-full border p-3 text-sm bg-white rounded"
+                  >
                     <option value="Pará">Pará</option>
                     <option value="Belém">Belém</option>
                     <option value="Política">Política</option>
@@ -321,7 +377,14 @@ export const Admin = () => {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1">Resumo da Matéria (para a Home):</label>
-                  <textarea name="summary" placeholder="Resumo curto..." className="w-full border p-2.5 text-sm rounded" rows="2" required></textarea>
+                  <textarea 
+                    value={newsSummary} 
+                    onChange={(e) => setNewsSummary(e.target.value)} 
+                    placeholder="Resumo curto..." 
+                    className="w-full border p-2.5 text-sm rounded" 
+                    rows="2" 
+                    required
+                  ></textarea>
                 </div>
               </div>
               
@@ -373,7 +436,9 @@ export const Admin = () => {
                 </div>
               )}
 
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 text-base font-bold rounded cursor-pointer">Publicar Notícia Oficial</button>
+              <button className={`w-full text-white p-3 text-base font-bold rounded cursor-pointer transition ${editingNewsId ? 'bg-amber-600 hover:bg-amber-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
+                {editingNewsId ? '💾 Salvar Alterações da Notícia' : '🚀 Publicar Notícia Oficial'}
+              </button>
           </form>
 
           {/* Seção de Rascunhos da IA e Publicadas */}
@@ -400,8 +465,21 @@ export const Admin = () => {
                 <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
                     {publishedNews.map(item => (
                         <div key={item.id} className="flex justify-between items-center text-xs bg-white p-3 rounded border shadow-sm">
-                            <span className="truncate max-w-70 font-medium">{item.title}</span>
-                            <button onClick={() => handleDelete('news', item.id)} className="text-red-500 hover:text-red-700 font-bold bg-red-50 px-2.5 py-1 rounded flex items-center gap-1"><Trash2 size={13}/> Excluir</button>
+                            <span className="truncate max-w-50 font-medium">{item.title}</span>
+                            <div className="flex gap-2">
+                              <button 
+                                onClick={() => handleEditNewsClick(item)} 
+                                className="text-amber-600 hover:text-amber-800 font-bold bg-amber-50 px-2.5 py-1 rounded flex items-center gap-1 cursor-pointer"
+                              >
+                                <Edit size={13}/> Editar
+                              </button>
+                              <button 
+                                onClick={() => handleDelete('news', item.id)} 
+                                className="text-red-500 hover:text-red-700 font-bold bg-red-50 px-2.5 py-1 rounded flex items-center gap-1 cursor-pointer"
+                              >
+                                <Trash2 size={13}/> Excluir
+                              </button>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -443,7 +521,7 @@ export const Admin = () => {
                             <span className="font-bold text-sm block">{item.title}</span>
                             <span className="text-gray-500">{item.role} • Por {item.author}</span>
                           </div>
-                          <button onClick={() => handleDelete('opinions', item.id)} className="text-red-500 hover:text-red-700 font-bold bg-red-50 px-3 py-1.5 rounded flex items-center gap-1"><Trash2 size={14}/> Excluir</button>
+                          <button onClick={() => handleDelete('opinions', item.id)} className="text-red-500 hover:text-red-700 font-bold bg-red-50 px-3 py-1.5 rounded flex items-center gap-1 cursor-pointer"><Trash2 size={14}/> Excluir</button>
                       </div>
                   ))}
               </div>
@@ -511,7 +589,7 @@ export const Admin = () => {
                   {editingUsername ? 'Salvar Alterações' : 'Cadastrar Membro'}
                 </button>
                 {editingUsername && (
-                  <button type="button" onClick={resetUserForm} className="bg-gray-400 text-white px-6 py-3 text-sm font-bold rounded">Cancelar</button>
+                  <button type="button" onClick={resetUserForm} className="bg-gray-400 text-white px-6 py-3 text-sm font-bold rounded cursor-pointer">Cancelar</button>
                 )}
               </div>
           </form>
@@ -526,9 +604,9 @@ export const Admin = () => {
                             <span className="ml-2 bg-green-100 text-green-800 px-2 py-0.5 rounded font-semibold">{u.role}</span>
                           </div>
                           <div className="flex gap-2">
-                            <button onClick={() => handleEditClick(u)} className="bg-blue-100 text-blue-700 px-3 py-1.5 rounded font-bold hover:bg-blue-200 flex items-center gap-1"><Edit size={13}/> Editar</button>
+                            <button onClick={() => handleEditClick(u)} className="bg-blue-100 text-blue-700 px-3 py-1.5 rounded font-bold hover:bg-blue-200 flex items-center gap-1 cursor-pointer"><Edit size={13}/> Editar</button>
                             {u.username !== 'geovanilobo' && (
-                              <button onClick={() => handleDelete('users', u.username)} className="bg-red-100 text-red-600 px-3 py-1.5 rounded font-bold hover:bg-red-200">Excluir</button>
+                              <button onClick={() => handleDelete('users', u.username)} className="bg-red-100 text-red-600 px-3 py-1.5 rounded font-bold hover:bg-red-200 cursor-pointer">Excluir</button>
                             )}
                           </div>
                       </div>

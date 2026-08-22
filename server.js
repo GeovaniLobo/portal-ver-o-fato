@@ -102,7 +102,16 @@ app.put('/api/news/:id', (req, res) => {
     const db = loadDB();
     const index = db.news.findIndex(n => String(n.id) === String(id));
     if (index === -1) return res.status(404).json({ error: 'Notícia não encontrada' });
-    db.news[index] = { ...db.news[index], ...updatedData };
+    
+    // Mantém as reações e a data original, atualizando apenas os campos editados
+    db.news[index] = { 
+        ...db.news[index], 
+        ...updatedData,
+        id: db.news[index].id,
+        date: db.news[index].date || new Date().toISOString(),
+        reactions: db.news[index].reactions || { like: 0, love: 0, wow: 0 }
+    };
+    
     saveDB(db);
     res.json({ success: true, message: 'Notícia atualizada com sucesso!' });
 });

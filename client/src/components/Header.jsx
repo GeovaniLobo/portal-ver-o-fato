@@ -85,20 +85,22 @@ export const Header = ({ darkMode, setDarkMode }) => {
       </div>
 
       {/* Menu de Editorias */}
-      <nav className="flex items-center gap-6 overflow-x-auto py-2 text-sm font-bold text-gray-800 whitespace-nowrap bg-white border-b px-4">
-  <Link to="/" className="hover:text-red-600 transition">Início</Link>
-  <Link to="/category/Pará" className="hover:text-red-600 transition">Pará</Link>
-  <Link to="/category/Belém" className="hover:text-red-600 transition">Belém</Link>
-  <Link to="/category/Política" className="hover:text-red-600 transition">Política</Link>
-  <Link to="/category/Economia" className="hover:text-red-600 transition">Economia</Link>
-  <Link to="/category/Esportes" className="hover:text-red-600 transition">Esportes</Link>
-  <Link to="/category/Cotidiano" className="hover:text-red-600 transition">Cotidiano</Link>
-  <Link to="/category/Cultura & Lazer" className="hover:text-red-600 transition">Cultura & Lazer</Link>
-  <Link to="/category/Amazônia & Meio Ambiente" className="hover:text-red-600 transition">Amazônia & Meio Ambiente</Link>
-  <Link to="/category/Brasil" className="hover:text-red-600 transition">Brasil</Link>
-  <Link to="/category/Mundo" className="hover:text-red-600 transition">Mundo</Link>
-  <Link to="/category/Tecnologia" className="hover:text-red-600 transition">Tecnologia</Link>
-  <Link to="/category/Saúde" className="hover:text-red-600 transition">Saúde</Link>
+     <nav className="bg-white border-b shadow-sm">
+  <div className="max-w-7xl mx-auto px-4 flex items-center justify-center gap-6 overflow-x-auto py-2.5 text-sm font-bold text-gray-800 whitespace-nowrap">
+    <Link to="/" className="hover:text-red-600 transition">Início</Link>
+    <Link to="/category/Pará" className="hover:text-red-600 transition">Pará</Link>
+    <Link to="/category/Belém" className="hover:text-red-600 transition">Belém</Link>
+    <Link to="/category/Política" className="hover:text-red-600 transition">Política</Link>
+    <Link to="/category/Economia" className="hover:text-red-600 transition">Economia</Link>
+    <Link to="/category/Esportes" className="hover:text-red-600 transition">Esportes</Link>
+    <Link to="/category/Cotidiano" className="hover:text-red-600 transition">Cotidiano</Link>
+    <Link to="/category/Cultura & Lazer" className="hover:text-red-600 transition">Cultura & Lazer</Link>
+    <Link to="/category/Amazônia & Meio Ambiente" className="hover:text-red-600 transition">Amazônia & Meio Ambiente</Link>
+    <Link to="/category/Brasil" className="hover:text-red-600 transition">Brasil</Link>
+    <Link to="/category/Mundo" className="hover:text-red-600 transition">Mundo</Link>
+    <Link to="/category/Tecnologia" className="hover:text-red-600 transition">Tecnologia</Link>
+    <Link to="/category/Saúde" className="hover:text-red-600 transition">Saúde</Link>
+  </div>
 </nav>
 
       {/* Modal de Previsão do Tempo Detalhada para Belém */}

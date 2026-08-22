@@ -15,7 +15,7 @@ export const NewsDetail = () => {
 
   const loadArticle = async () => {
     try {
-      const res = await api.get(`/api/news/${id}`)
+      const res = await api.get('/api/news'); // Busca a lista completa de notícias
       const found = res.data.find(item => String(item.id) === String(id));
       if (found) {
         setNews(found);

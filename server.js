@@ -78,9 +78,11 @@ app.put('/api/users/:username', async (req, res) => {
     res.json({ message: 'Usuário atualizado com sucesso!' });
 });
 
+// Rota de Upload corrigida para gerar URL limpa sem porta 3000
 app.post('/api/upload', upload.single('image'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado' });
-    res.json({ imageUrl: `https://server-ixpv.onrender.com/uploads/${req.file.filename}` });
+    const host = req.get('host').includes('localhost') ? `http://localhost:3000` : `https://server-ixpv.onrender.com`;
+    res.json({ imageUrl: `${host}/uploads/${req.file.filename}` });
 });
 
 // Rotas Conteúdo - Notícias
@@ -94,7 +96,6 @@ app.post('/api/news', (req, res) => {
     res.json({ message: 'Sucesso', data: newArticle });
 });
 
-// Rota de aprovação de rascunho (PUT corrigido com /api)
 app.put('/api/news/:id', (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
@@ -141,7 +142,7 @@ app.delete('/api/:endpoint/:id', (req, res) => {
     res.status(404).json({ error: 'Endpoint inválido' });
 });
 
-// Rota Curadoria (Blindada contra erros da API externa)
+// Rota Curadoria
 const executarCuradoria = require('./services/curator');
 app.get('/executar-curadoria', async (req, res) => {
     try {
@@ -152,4 +153,5 @@ app.get('/executar-curadoria', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log('🚀 Servidor rodando na porta 3000'));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));

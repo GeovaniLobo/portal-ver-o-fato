@@ -18,8 +18,8 @@ const Home = ({ darkMode }) => {
   const searchQuery = searchParams.get('search');
 
   useEffect(() => {
-    api.get('/news').then(res => setNewsList(res.data)).catch(err => console.error(err));
-    api.get('/opinions').then(res => setOpinionsList(res.data)).catch(err => console.error(err));
+    api.get('/api/news').then(res => setNewsList(res.data)).catch(err => console.error(err));
+    api.get('/api/opinions').then(res => setOpinionsList(res.data)).catch(err => console.error(err));
   }, []);
 
   useEffect(() => {
@@ -137,7 +137,6 @@ const Home = ({ darkMode }) => {
                   <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-4 flex-grow line-clamp-3 leading-relaxed`}>{item.summary}</p>
                   
                   <div className={`text-[11px] ${darkMode ? 'text-gray-400 border-gray-700' : 'text-gray-400 border-gray-100'} border-t pt-3 flex justify-between items-center`}>
-                    {/* Link restaurado para o perfil do autor */}
                     <Link to={`/author/${encodeURIComponent(item.author || 'Redação')}`} className={`font-semibold hover:underline ${darkMode ? 'text-gray-200 hover:text-para-red' : 'text-gray-700 hover:text-para-red'}`}>
                       {item.author || 'Redação'}
                     </Link>

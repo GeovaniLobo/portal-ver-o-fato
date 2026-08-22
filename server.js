@@ -80,7 +80,7 @@ app.put('/api/users/:username', async (req, res) => {
 
 app.post('/api/upload', upload.single('image'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado' });
-    res.json({ imageUrl: `https://server-ixpv.onrender.com3000/uploads/${req.file.filename}` });
+    res.json({ imageUrl: `https://server-ixpv.onrender.com/uploads/${req.file.filename}` });
 });
 
 // Rotas Conteúdo - Notícias

@@ -44,7 +44,7 @@ async function executarCuradoria(categoria = 'Esportes', query = 'Paysandu Sport
             category: categoria,
             summary: noticiaReescrita.summary,
             content: noticiaReescrita.content,
-            imageUrl: "https://server-ixpv.onrender.com3000/uploads/1787358105033.png",
+            imageUrl: "https://server-ixpv.onrender.com/uploads/1787358105033.png",
             author: 'Curadoria IA',
             date: new Date().toISOString(),
             status: 'pendente',

@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --color-para-red: #D32F2F;
+  --color-para-blue: #1976D2;
+}
+
+body {
+  background-color: #F9FAFB;
+  color: #111827;
+}
+
+/* Ajustes para o Editor Rico (Quill) */
+.quill {
+  background-color: #fff;
+  border-radius: 0.375rem;
+}
+.ql-container {
+  font-size: 1rem;
+  font-family: inherit;
+  min-height: 200px;
+}
+/* Estilo para imagens inseridas no editor aparecerem alinhadas e bonitas na leitura */
+.ql-editor-output img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5rem auto;
+  display: block;
+}
+.ql-editor-output p {
+  margin-bottom: 1.25rem;
+}
